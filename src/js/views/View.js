@@ -8,6 +8,31 @@ export default class View {
     const markup = this._generateMarkup();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
+  update(data) {
+    this._data = data;
+    // this._clear();
+    if (this._data.length === 0) this.renderError();
+    const newMarkup = this._generateMarkup();
+    const newDOM = document.createRange().createContextualFragment(newMarkup);
+    const newElements = Array.from(newDOM.querySelectorAll('*'));
+    const currElements = Array.from(this._parentElement.querySelectorAll('*'));
+    newElements.forEach((newElement, i) => {
+      const currElement = currElements[i];
+      // Updates text
+      if (
+        !newElement.isEqualNode(currElement) &&
+        newElement.firstChild?.nodeValue.trim() !== ''
+      ) {
+        currElement.textContent = newElement.textContent;
+      }
+      // Updates dataset
+      if (!newElement.isEqualNode(currElement)) {
+        Array.from(newElement.attributes).forEach(newAttr => {
+          currElement.setAttribute(newAttr.name, newAttr.value);
+        });
+      }
+    });
+  }
   renderSpinner() {
     const markup = `
           <div class="spinner">

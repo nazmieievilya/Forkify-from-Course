@@ -11,6 +11,16 @@ const toggleMessage = function () {
   document.querySelector('.message').remove();
 };
 
+const controlServings = function (updateTo) {
+  // update recipe servings in state
+  let servings = model.state.recipe.servings;
+
+  model.updateServings(updateTo);
+  // recipeView.render(model.state.recipe);
+  recipeView.update(model.state.recipe);
+
+  // update view
+};
 const controlRecipes = async function () {
   try {
     const id = window.location.hash.slice(1);
@@ -18,6 +28,7 @@ const controlRecipes = async function () {
     // Rendering recipe
     recipeView.renderSpinner();
     await model.loadRecipe(id);
+
     recipeView.render(model.state.recipe);
   } catch (e) {
     console.log(e);
@@ -27,6 +38,7 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
+    model.state.search.page = 1;
     // get search query
     const query = searchView.getQuery();
     if (!query) return;
@@ -34,19 +46,26 @@ const controlSearchResults = async function () {
     resultsView.renderSpinner();
     await model.loadSearchResults(query);
     // render search results
-    resultsView.render(model.getSearchResultPage(1));
+    resultsView.render(model.getSearchResultPage());
     // render pagination
     paginationView.render(model.state.search);
   } catch (e) {
     console.log(e);
   }
 };
+const pageController = function (page) {
+  resultsView.render(model.getSearchResultPage(page));
+  paginationView.render(model.state.search);
+};
 
 controlSearchResults();
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerSerch(controlSearchResults);
+  paginationView.addHandlerClick(pageController);
+  recipeView.addHandlerUpdateServings(controlServings);
 };
+
 init();
 if (module.hot) {
   module.hot.accept();
