@@ -1,17 +1,16 @@
 import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
-  render(data) {
+  render(data, render = true) {
     this._data = data;
-    this._clear();
     if (this._data.length === 0) this.renderError();
     const markup = this._generateMarkup();
+    if (!render) return markup;
+    this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
   update(data) {
     this._data = data;
-    // this._clear();
-    if (this._data.length === 0) this.renderError();
     const newMarkup = this._generateMarkup();
     const newDOM = document.createRange().createContextualFragment(newMarkup);
     const newElements = Array.from(newDOM.querySelectorAll('*'));
