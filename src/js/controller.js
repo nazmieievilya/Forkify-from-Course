@@ -28,6 +28,8 @@ const controlRecipes = async function () {
     //rendering results
     recipeView.render(model.state.recipe);
     // update bookmarks
+    console.error('HACKED');
+
     bookmarksView.update(model.state.bookmarks);
   } catch (e) {
     console.log(e);
