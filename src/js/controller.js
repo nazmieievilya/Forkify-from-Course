@@ -106,6 +106,7 @@ const init = function () {
   recipeView.addHandlerBookmark(controlAddBookmark);
   bookmarksView.addHandlerRender(controlBookmarks);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  console.log('Test branch');
 };
 
 init();
